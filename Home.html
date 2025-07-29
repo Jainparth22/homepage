@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<meta charset="UTF-8">
+<title>Home</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google Fonts for style -->
+<link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+<style>
+    :root {
+        --bg: #18181b;
+        /* Main accent: Kesariya/Orange (warm, deep) */
+        --accent: #ff9800;
+        /* Card background: dark blue shade */
+        --card-bg: #232347;
+        /* Main text: nearly white */
+        --text: #f5f5f7;
+        /* Muted text: soft light orange-tan */
+        --muted: #ffd6a0;
+        --border-radius: 18px;
+        --transition: 0.2s;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        /* Gradient: dark indigo → blue → kesariya orange with a hint of white at the end */
+        background: linear-gradient(120deg,
+                #18181b 0%,
+                /* almost black */
+                #232347 45%,
+                /* deep blue for cards */
+                #205bff 60%,
+                /* bright but darkened blue */
+                #ff9800 80%,
+                /* bold orange accent */
+                #fff 100%
+                /* little white touch at edge */
+            );
+        font-family: 'Roboto', Arial, sans-serif;
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .container {
+        max-width: 1200px;
+        width: 100%;
+        margin: 24px auto;
+        display: grid;
+        /* grid-template-columns: 350px 500px 350px; */
+        grid-template-columns: 1fr 1.5fr 1fr;
+
+        gap: 32px;
+    }
+
+    .card {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        padding: 22px 22px 18px 22px;
+        box-shadow: 0 2px 12px rgb(74 58 255 / 0.10);
+        margin-bottom: 18px;
+        transition: box-shadow var(--transition);
+    }
+
+    .card:hover {
+        box-shadow: 0 4px 20px rgb(74 58 255 / 0.15);
+    }
+
+    h1,
+    h2 {
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--accent);
+        margin: 0 0 8px 0;
+        font-weight: 700;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    .main {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .clock {
+        font-size: 3rem;
+        text-align: center;
+        font-weight: bold;
+        color: var(--accent);
+        text-shadow: 0 2px 8px #312e81;
+    }
+
+    .date {
+        text-align: center;
+        font-size: 1.1rem;
+        color: var(--muted);
+    }
+
+    .greeting {
+        text-align: center;
+        font-size: 1.2rem;
+        margin: 12px 0 0 0;
+        color: var(--accent);
+    }
+
+    .links-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .quick-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #312e81;
+        color: var(--accent);
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        padding: 16px 0;
+        font-size: 1.1rem;
+        transition: background var(--transition);
+    }
+
+    .quick-link:hover {
+        background: #4338ca;
+    }
+
+    .todo-input {
+        width: 100%;
+        border-radius: 7px;
+        border: 1px solid #27272a;
+        background: #18181b;
+        color: var(--text);
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        font-size: 1rem;
+    }
+
+    .todo-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .todo-list li {
+        padding: 7px 0;
+        border-bottom: 1px solid #27272a;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .deadline-list {
+        font-size: 0.97rem;
+        margin-left: 0;
+        padding-left: 0;
+    }
+
+    .deadline-list li {
+        padding: 6px 0;
+        display: flex;
+        /* justify-content: space-between; */
+        align-items: flex-start;
+        gap: 10px;
+        margin-left: 0;
+        padding-left: 0;
+    }
+
+
+    .deadline-list li>span:first-child {
+        flex: 2 1 0;
+        min-width: 0;
+        /* This lets the left side (name + date) stretch */
+        word-break: break-word;
+
+    }
+
+    .deadline-list li>span:last-child {
+        flex: 0 0 auto;
+        white-space: nowrap;
+
+
+        /* This keeps status and delete icon from stretching */
+    }
+
+    .focus-field {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 7px;
+        border: 1px solid #27272a;
+        background: #18181b;
+        color: var(--text);
+        font-size: 1rem;
+        margin-top: 0.5em;
+    }
+
+    .notes-area {
+        width: 100%;
+        min-height: 90px;
+        border: 1px solid #27272a;
+        border-radius: 7px;
+        padding: 12px 14px;
+        font-size: 1rem;
+        resize: vertical;
+        margin-top: 6px;
+        background: #18181b;
+        color: var(--text);
+    }
+
+    .timer-controls {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+        justify-content: center;
+    }
+
+    .pomodoro-label {
+        text-align: center;
+        margin-top: 3px;
+        color: var(--muted);
+    }
+
+    .quote {
+        font-style: italic;
+        color: var(--muted);
+        text-align: center;
+        margin: 6px 0 0 0;
+    }
+
+    .deadline-inputs {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 7px;
+    }
+
+    .deadline-inputs input[type="text"] {
+        flex: 2 1 0;
+        /* Task name gets most space */
+        min-width: 0;
+        width: 100%;
+        border-radius: 7px;
+        border: 1px solid #27272a;
+        background: #18181b;
+        color: var(--text);
+        padding: 12px 14px;
+        font-size: 1rem;
+    }
+
+    .deadline-inputs input[type="date"] {
+        flex: 0.28 1 0;
+        /* Date gets less space */
+        min-width: 0;
+        width: 100%;
+        border-radius: 7px;
+        border: 1px solid #27272a;
+        background: #ff9800;
+        color: var(--text);
+        padding: 7px 10px;
+        font-size: 1rem;
+    }
+    
+    .deadline-inputs button {
+        background: var(--accent);
+        /* flex: 0 0 auto; */
+        color: var(--text);
+        border-radius: 7px;
+        border: none;
+        outline: none;
+        padding: 7px 10px;
+        font-weight: bold;
+        transition: background var(--transition);
+    }
+
+    .deadline-inputs button:hover {
+        background: #ffad42;
+        /* Lighten on hover */
+    }
+
+    @media (max-width: 900px) {
+        .container {
+            max-width: 100vw;
+            width: 100%;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            padding: 20px 15px;
+        }
+
+        .clock {
+            font-size: 2.2rem;
+        }
+    }
+</style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Left Panel -->
+        <div>
+            <div class="card">
+                <h2>Quick Links</h2>
+                <div class="links-grid">
+                    <a class="quick-link" href="https://mail.google.com/" target="_blank">Email</a>
+                    <a class="quick-link" href="https://classroom.google.com/" target="_blank">Classroom</a>
+                    <a class="quick-link" href="https://keep.google.com/" target="_blank">Notes</a>
+                    <a class="quick-link" href="https://calendar.google.com/" target="_blank">Calendar</a>
+                    <a class="quick-link" href="https://vtop.vitbhopal.ac.in/vtop/login" target="_blank">VTOP</a>
+                    <a class="quick-link" href="https://www.notion.so/" target="_blank">Notion</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Deadlines</h2>
+                <div class="deadline-inputs">
+                    <input id="deadlineName" placeholder="Task" type="text" />
+                    <input id="deadlineDate" type="date" />
+                    <button id="addDeadline" type="button" style="color: #18181b;">Add</button>
+                </div>
+                <ul class="deadline-list" id="deadlines">
+                    <li>No deadlines yet.</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- Center Panel -->
+        <div class="main">
+            <div class="card" style="padding-bottom:10px;">
+                <div class="clock" id="clock"></div>
+                <div class="date" id="date"></div>
+                <div class="greeting" id="greeting"></div>
+            </div>
+
+            <div class="card">
+                <h2>Today's Focus</h2>
+                <input class="focus-field" id="focusInput" placeholder="Type your focus for today..." maxlength="80" />
+            </div>
+
+            <div class="card">
+                <div style="display:flex; justify-content:space-between;align-items:center;">
+                    <h2 style="margin:0;">To-Do</h2>
+                    <button id="clearTodos" title="Clear all"
+                        style="font-size:0.9em; background:none; border:none; cursor:pointer; color:#888;">🗑️</button>
+                </div>
+                <input class="todo-input" id="todoInput" placeholder="Add new task..." maxlength="48" />
+                <ul class="todo-list" id="todoList"></ul>
+            </div>
+
+            <div class="card">
+                <h2>Pomo Timer</h2>
+                <div id="timerDisplay" class="clock" style="font-size:2rem;">25:00</div>
+                <div class="timer-controls">
+                    <button onclick="startTimer(25)" class="quick-link"
+                        style="padding:6px 18px;font-size:1rem;">Start</button>
+                    <button onclick="pauseTimer()" class="quick-link"
+                        style="padding:6px 18px;font-size:1rem;">Pause</button>
+                    <button onclick="resetTimer()" class="quick-link"
+                        style="padding:6px 18px;font-size:1rem;">Reset</button>
+                </div>
+                <div class="pomodoro-label">Pomodoro: 25/5</div>
+            </div>
+        </div>
+
+
+        <!-- Right Panel -->
+        <div>
+            <div class="card">
+                <h2>Notes</h2>
+                <textarea class="notes-area" id="notesArea" placeholder="Jot down quick notes..."></textarea>
+            </div>
+
+            <div class="card">
+                <h2>Words</h2>
+                <div class="quote" id="quote"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Clock, Date, and Greeting
+        function updateClockAndDate() {
+            const clock = document.getElementById('clock');
+            const date = document.getElementById('date');
+            const d = new Date();
+            clock.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+            date.textContent = d.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+            // Greeting
+            const hour = d.getHours();
+            let greet;
+            if (hour < 12) greet = "Good morning!";
+            else if (hour < 18) greet = "Good afternoon!";
+            else greet = "Good evening!";
+            document.getElementById('greeting').textContent = greet;
+        }
+        setInterval(updateClockAndDate, 1000);
+        updateClockAndDate();
+
+        // To-Do List
+        const todoInput = document.getElementById('todoInput');
+        const todoList = document.getElementById('todoList');
+        const clearTodos = document.getElementById('clearTodos');
+        let todos = JSON.parse(localStorage.getItem('todos') || '[]');
+        function renderTodos() {
+            todoList.innerHTML = '';
+            if (!todos.length) { todoList.innerHTML = '<li style="color:#555;">All done!</li>'; return; }
+            todos.forEach((t, i) => {
+                const li = document.createElement('li');
+                li.textContent = t;
+                const btn = document.createElement('button');
+                btn.textContent = '✓';
+                btn.title = "Mark as done";
+                btn.style.background = "none";
+                btn.style.border = "none";
+                btn.style.color = "#22c55e";
+                btn.style.cursor = "pointer";
+                btn.onclick = () => { todos.splice(i, 1); saveTodos(); };
+                li.appendChild(btn);
+                todoList.appendChild(li);
+            });
+        }
+        function saveTodos() {
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+        }
+        todoInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter' && todoInput.value.trim()) {
+                todos.unshift(todoInput.value.trim());
+                todoInput.value = '';
+                saveTodos();
+            }
+        });
+        clearTodos.onclick = function () {
+            if (confirm('Clear all to-dos?')) { todos = []; saveTodos(); }
+        };
+        renderTodos();
+
+        // Daily Focus
+        const focusInput = document.getElementById('focusInput');
+        function loadFocus() {
+            focusInput.value = localStorage.getItem('focus') || '';
+        }
+        focusInput.addEventListener('change', function () {
+            localStorage.setItem('focus', focusInput.value);
+        });
+        loadFocus();
+
+        // Notes persistence
+        const notesArea = document.getElementById('notesArea');
+        notesArea.value = localStorage.getItem('notes') || '';
+        notesArea.oninput = function () {
+            localStorage.setItem('notes', notesArea.value);
+        };
+
+        // Pomodoro Timer
+        let timer, totalSec = 1500, running = false;
+        function showTime(s) {
+            const min = Math.floor(s / 60).toString().padStart(2, '0');
+            const sec = (s % 60).toString().padStart(2, '0');
+            document.getElementById('timerDisplay').textContent = `${min}:${sec}`;
+        }
+        function startTimer(mins = 25) {
+            if (running) return;
+            totalSec = mins * 60;
+            running = true;
+            showTime(totalSec);
+            timer = setInterval(() => {
+                if (--totalSec <= 0) { pauseTimer(); showTime(0); alert("Time's up!"); }
+                else showTime(totalSec);
+            }, 1000);
+        }
+        function pauseTimer() { running = false; clearInterval(timer); }
+        function resetTimer() { pauseTimer(); totalSec = 1500; showTime(totalSec); }
+        showTime(1500);
+
+        // Editable, persistent Deadlines
+        const deadlineName = document.getElementById('deadlineName');
+        const deadlineDate = document.getElementById('deadlineDate');
+        const addDeadlineBtn = document.getElementById('addDeadline');
+        const deadlinesUl = document.getElementById('deadlines');
+
+        let deadlines = JSON.parse(localStorage.getItem('deadlines') || '[]');
+
+        // function renderDeadlines() {
+        //     const now = new Date();
+        //     deadlinesUl.innerHTML = '';
+        //     if(!deadlines.length) {
+        //         deadlinesUl.innerHTML = '<li>No deadlines yet.</li>';
+        //         return;
+        //     }
+        //     // sort by date ascending
+        //     deadlines
+        //         .sort((a,b)=> new Date(a.date) - new Date(b.date))
+        //         .forEach((dl, i) => {
+
+        //             const due = new Date(dl.date);
+        //             const diff = Math.ceil((due - now) / (1000*60*60*24));
+        //             let str = '';
+        //             if (diff > 0) {
+        //                 str = `<span style="color:#aaa;font-size:0.95em;">(${diff} day${diff!==1?'s':''} left)</span>`;
+        //             } else if (diff === 0) {
+        //                 str = `<span style="color:#22d3ee;font-size:0.95em;">(Today)</span>`;
+        //             } else {
+        //                 str = `<span style="color:#f87171;font-size:0.95em;">(${Math.abs(diff)} day${Math.abs(diff)!==1?'s':''} ago)</span>`;
+        //             }
+        //             const li = document.createElement('li');
+        //             li.innerHTML = `
+        //                 <span>${dl.name}: <span style="color:var(--accent)">${dl.date}</span> </span>
+        //                 <span>${str} <button title="Delete" style="background:none;border:none;cursor:pointer;color:#e11d48;font-size:1.1em;vertical-align:middle" onclick="removeDeadline(${i})">🗑️</button></span>
+        //             `;
+        //             deadlinesUl.appendChild(li);
+        //         });
+        // }
+
+
+        function renderDeadlines() {
+            const now = new Date();
+            deadlinesUl.innerHTML = '';
+            if (!deadlines.length) {
+                deadlinesUl.innerHTML = '<li>No deadlines yet.</li>';
+                return;
+            }
+            // Sort deadlines by date ascending
+            deadlines
+                .sort((a, b) => new Date(a.date) - new Date(b.date))
+                .forEach((dl, i) => {
+                    const due = new Date(dl.date);
+                    const diff = Math.ceil((due - now) / (1000 * 60 * 60 * 24));
+
+                    // Format date as "DD-MM" (without year)
+                    const day = due.getDate().toString().padStart(2, '0');
+                    const month = (due.getMonth() + 1).toString().padStart(2, '0');
+                    const displayDate = `${day}-${month}`;
+
+                    let str = '';
+                    if (diff > 0) {
+                        str = `<span style="color:#aaa;font-size:0.95em;">(${diff} day${diff !== 1 ? 's' : ''} left)</span>`;
+                    } else if (diff === 0) {
+                        str = `<span style="color:#22d3ee;font-size:0.95em;">(Today)</span>`;
+                    } else {
+                        str = `<span style="color:#f87171;font-size:0.95em;">(${Math.abs(diff)} day${Math.abs(diff) !== 1 ? 's' : ''} ago)</span>`;
+                    }
+
+
+
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                <span>${dl.name}: <span style="color:var(--accent)">${displayDate}</span></span>
+                <span>${str} <button title="Delete" style="background:none;border:none;cursor:pointer;color:#e11d48;font-size:1.1em;vertical-align:middle" onclick="removeDeadline(${i})">🗑️</button></span>
+            `;
+                    deadlinesUl.appendChild(li);
+                });
+        }
+
+
+
+        // Remove deadline utility; must be global for inline onclick
+        window.removeDeadline = function (idx) {
+            deadlines.splice(idx, 1);
+            saveDeadlines();
+        };
+        function saveDeadlines() {
+            localStorage.setItem('deadlines', JSON.stringify(deadlines));
+            renderDeadlines();
+        }
+
+        addDeadlineBtn.onclick = function () {
+            const name = deadlineName.value.trim();
+            const date = deadlineDate.value;
+            if (name && date) {
+                deadlines.push({ name, date });
+                deadlineName.value = '';
+                deadlineDate.value = '';
+                saveDeadlines();
+            }
+        };
+        // Allow add by enter on text or date input
+        deadlineName.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') addDeadlineBtn.click();
+        });
+        deadlineDate.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') addDeadlineBtn.click();
+        });
+        renderDeadlines();
+
+        // Motivational Quote (rotating)
+        const quotes = [
+            "Escape competition through authenticity.",
+            "If you can’t code, write books and blogs, record videos and podcasts.",
+            "Desire is a contract you make with yourself to be unhappy until you get what you want.",
+            "Productize yourself.",
+            "You’re not going to get rich renting out your time.",
+            "Play long-term games with long-term people.",
+            "Impatience with actions, patience with results.",
+            "Happiness is a choice and a skill and you can dedicate yourself to learning that skill.",
+            "If you can’t decide, the answer is no.",
+            "Become the best in the world at what you do. Keep redefining what you do until this is true.",
+            "All the benefits in life come from compound interest.",
+            "Enlightenment is the space between your thoughts.",
+            "Reading is more efficient when at rest.",
+            "The fundamental delusion — there is something out there that will make me happy and fulfilled forever.",
+            "Retirement is when you stop sacrificing today for some imaginary tomorrow.",
+            "Guard your time as the most precious asset.",
+            "Learn to sell. Learn to build. If you can do both, you will be unstoppable.",
+            "Earn with your mind, not your time.",
+            "Self-esteem is the reputation you have with yourself.",
+            "A rational person can find peace by cultivating indifference to things outside of their control.",
+            "The only way to truly learn something is by doing it.",
+            "Don’t partner with cynics and pessimists. Their beliefs are self-fulfilling.",
+            "The three big ones in life are wealth, health, and happiness. We pursue them in that order, but their importance is in the reverse.",
+            "If you want to be successful, surround yourself with optimists.",
+            "No one can compete with you on being you.",
+            "Busy is the death of productivity.",
+            "Learn to love to read.",
+            "By the time people realize they have enough, they’ve lost their capacity to enjoy more.",
+            "Judgment requires experience, but can be built faster by learning foundational skills.",
+            "The means of learning are abundant — it’s the desire to learn that is scarce.",
+            "To be honest, speak without identity.",
+            "Society will pay you for creating things it wants.",
+            "Don’t take yourself so seriously. You’re just a monkey with a plan.",
+            "You will get rich by giving society what it wants but does not yet know how to get.",
+            "All greatness comes from suffering.",
+            "Modern life is a single player game.",
+            "Real happiness comes from peace."
+        ];
+        function showQuote() {
+            const idx = Math.floor(Math.random() * quotes.length);
+            document.getElementById('quote').textContent = quotes[idx];
+        }
+        showQuote();
+        setInterval(showQuote, 1000 * 60 * 60); // rotate hourly
+    </script>
+</html>
